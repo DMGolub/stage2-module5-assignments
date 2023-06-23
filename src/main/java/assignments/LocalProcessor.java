@@ -22,7 +22,7 @@ public class LocalProcessor {
     private Long period = 10_000_000_000_000L;
     private String processorVersion;
     private Integer valueOfCheap;
-    private Scanner scanner;
+    private Scanner informationScanner;
     private List<String> stringArrayList = new ArrayList<>();
 
     public LocalProcessor(
@@ -37,7 +37,7 @@ public class LocalProcessor {
         this.period = period;
         this.processorVersion = processorVersion;
         this.valueOfCheap = valueOfCheap;
-        this.scanner = informationScanner;
+        this.informationScanner = informationScanner;
         this.stringArrayList = stringArrayList;
     }
 
@@ -63,10 +63,10 @@ public class LocalProcessor {
 
     @ReadFullProcessorNameAnnotation
     public void readFullProcessorVersion(File file) throws FileNotFoundException {
-        scanner = new Scanner(file);
+        informationScanner = new Scanner(file);
         StringBuilder builder = new StringBuilder(processorVersion);
-        while (scanner.hasNext()) {
-            builder.append(scanner.nextLine());
+        while (informationScanner.hasNext()) {
+            builder.append(informationScanner.nextLine());
         }
         processorVersion = builder.toString();
     }
