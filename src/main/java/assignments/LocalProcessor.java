@@ -3,8 +3,8 @@ package assignments;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.StringJoiner;
 
@@ -46,27 +46,34 @@ public class LocalProcessor {
     }
 
     @ListIteratorAnnotation
-    public void setStringsAndPrintListHashCode(List<String> strings) {
-        strings = new LinkedList<>(strings);
-        for (int i = 0; i < period; i++) {
-            System.out.println(strings.get(i).hashCode());
-        }
+    public void printListElementsHashCode(List<String> strings) {
+        strings.stream().filter(Objects::nonNull)
+                .mapToInt(s -> s.hashCode())
+                .forEach(System.out::println);
     }
 
     @FullNameProcessorGeneratorAnnotation
     public String buildFullProcessorName(List<String> stringList) {
-        StringJoiner builder = new StringJoiner(" ");
-        builder.add(processorName);
-        stringArrayList.forEach(builder::add);
-        return builder.toString();
+        StringJoiner joiner = new StringJoiner(" ");
+        joiner.add(processorName);
+        stringArrayList.forEach(joiner::add);
+        return joiner.toString();
     }
 
     @ReadFullProcessorNameAnnotation
-    public void readFullProcessorVersion(File file) throws FileNotFoundException {
-        informationScanner = new Scanner(file);
+    public void readFullProcessorVersion(File file) {
         StringBuilder builder = new StringBuilder(processorVersion);
-        while (informationScanner.hasNext()) {
-            builder.append(informationScanner.nextLine());
+        try {
+            informationScanner = new Scanner(file);
+            while (informationScanner.hasNext()) {
+                builder.append(informationScanner.nextLine());
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found");
+        } finally {
+            if (informationScanner != null) {
+                informationScanner.close();
+            }
         }
         processorVersion = builder.toString();
     }
